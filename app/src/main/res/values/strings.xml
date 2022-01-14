@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">todoList</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="home_fragment_label">Tasks</string>
+    <string name="detail_fragment_label">Task Detalhada</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="msgSucess">Operação realizada com sucesso!</string>
+
+    <string name="nesse_mes">Nesse Dia</string>
+
+    <string name="erroTaskListGeneral">Tivemos um problema ao trazer suas atividades!</string>
+    <string name="erroTaskInsertGeneral">Não Conseguimos cadastrar sua atividade!</string>
+    <string name="erroEmptyTituloTask">Você deve informar um Título!</string>
+
+    <string name="addTituloTaskHint">Título</string>
+    <string name="addDetalheTaskHint">Detalhe</string>
+
+    <string name="btnSave">Salvar</string>
+    <string name="btnCancel">Cancelar</string>
+</resources>
