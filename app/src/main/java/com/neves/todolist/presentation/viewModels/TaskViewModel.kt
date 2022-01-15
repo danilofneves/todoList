@@ -32,7 +32,7 @@ class TaskViewModel @Inject constructor(
                 it.toTaskItemUiState( onTaskCheck = { onCheckTask(it)})
             }
 
-            return@launchOnUiState currentList
+            currentList
         }
     }
 
@@ -40,7 +40,7 @@ class TaskViewModel @Inject constructor(
         this.launchOnUiState(_uiState) {
             saveTask(task)
             currentList = currentList.plus(task.toTaskItemUiState { onCheckTask(task) })
-            return@launchOnUiState currentList
+            currentList
         }
     }
 
@@ -52,7 +52,7 @@ class TaskViewModel @Inject constructor(
                 if (currentTask.id == task.id) currentTask.copy(done = task.done)
                 else currentTask
             }
-            return@launchOnUiState currentList
+            currentList
         }
     }
 
