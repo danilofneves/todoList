@@ -1,58 +1,52 @@
 package com.neves.data.local
 
 import com.neves.data.local.database.TaskDAO
+import com.neves.data.local.exception.SaveLocalException
 import com.neves.data.mapper.toTask
-import com.neves.domain.Either
 import com.neves.data.model.TaskRoom
-import com.neves.domain.exception.TaskException
 import com.neves.domain.model.Task
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
 
 class LocalDataSourceImpl @Inject constructor(private val dao: TaskDAO) : LocalDataSource {
 
-    override suspend fun fetch(): Either<List<Task>, Exception>  {
-        return try{
-            val result = dao.getTaskList()
-            Either.Success(result.map {
+    override suspend fun fetch(): List<Task>  {
+        return runInRoom {
+            dao.getTaskList().map {
                 it.toTask()
-            })
-        }
-        catch (e:Exception){
-            Either.Failure(TaskException.GeneralListException)
+            }
         }
     }
 
-    override suspend fun fetchWithDate(from: Date, to:Date): Either<List<Task>, Exception>  {
-        return try{
-            val result = dao.getTaskWithDateList(from, to)
-            Either.Success(result.map {
+    override suspend fun fetchWithDate(from: Date, to:Date): List<Task>  {
+        return runInRoom {
+            dao.getTaskWithDateList(from, to).map {
                 it.toTask()
-            })
-        }
-        catch (e:Exception){
-            Either.Failure(TaskException.GeneralListException)
+            }
         }
     }
 
-    override suspend fun save(task: TaskRoom): Either<Unit, Exception> {
-        return try{
-            dao.insert(task)
-            Either.Success(Unit)
-        }
-        catch (e:Exception){
-            Either.Failure(TaskException.GeneralInsertException)
+    override suspend fun save(taskRoom: TaskRoom) {
+        return runInRoom {
+            dao.insert(taskRoom)
         }
     }
 
-    override suspend fun update(taskRoom: TaskRoom): Either<Unit, Exception> {
-        return try{
+    override suspend fun update(taskRoom: TaskRoom) {
+        return runInRoom {
             dao.update(taskRoom)
-            Either.Success(Unit)
         }
-        catch (e:Exception){
-            Either.Failure(TaskException.GeneralInsertException)
+    }
+
+    private suspend fun <T> runInRoom(call: suspend () -> T): T {
+        //CASO FOSSE UM DATASOURCE DE CONEXÃO COM A INTERNET, ESSE MÉTODO, OU ATÉ UMA CLASSE INJETADA,
+        //PODERIA VERIFICAR SE TEM CONEXÃO COM A INTERNET E LANÇAR UMA EXCEÇÃO DO TIPO NOCONECTIONEXCEPTION
+        try {
+            return call.invoke()
+        } catch (e: Exception) {
+            throw SaveLocalException()
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.neves.todolist.presentation.state
 
-sealed class UiState {
-    object Success: UiState()
-    data class Failure(val exception:Exception): UiState()
-    object Loading: UiState()
-    object Empty: UiState()
+sealed class UiState<out T> {
+    data class Success<out T>(val value: T): UiState<T>()
+    data class Failure(val exception:Exception): UiState<Nothing>()
+    object Loading: UiState<Nothing>()
+    object Empty: UiState<Nothing>()
 }
