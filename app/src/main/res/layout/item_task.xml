@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/titulo_task"
-            tools:text="Myleno é doido"
+            tools:text="descrição"
             android:textSize="18sp"
             android:layout_marginStart="10dp"/>
 
