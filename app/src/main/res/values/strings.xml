@@ -8,6 +8,7 @@
     <string name="previous">Previous</string>
 
     <string name="msgSucess">Operação realizada com sucesso!</string>
+    <string name="errorLocal">Problema de conexão com o banco de dados</string>
 
     <string name="nesse_mes">Nesse Dia</string>
 

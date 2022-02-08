@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.neves.domain.model.Task
 import com.neves.todolist.R
@@ -15,9 +14,7 @@ import com.neves.todolist.databinding.DialogTaskBinding
 import com.neves.todolist.databinding.FragmentHomeBinding
 import com.neves.todolist.presentation.adapter.TaskItemViewAdapter
 import com.neves.todolist.presentation.extensions.*
-import com.neves.todolist.presentation.mapper.exception
 import com.neves.todolist.presentation.state.TaskItemUiState
-import com.neves.todolist.presentation.state.UiState
 import com.neves.todolist.presentation.viewModels.TaskViewModel
 import com.neves.todolist.presentation.viewModels.ViewModelFactory
 import dagger.android.support.AndroidSupportInjection
@@ -56,10 +53,16 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
         binding.rvTask.adapter = taskAdapter
 
-        lifecycle(taskViewModel.taskLiveData, ::handleListTask)
-        lifecycle(taskViewModel.uiState, ::handleUiEvents)
+        setupObservers()
 
         return binding.root
+    }
+
+    private fun setupObservers() {
+        observerState(binding.progressTask, taskViewModel.uiState) {
+            handleListTask(it)
+            toast(getString(R.string.msgSucess))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,16 +77,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     private fun handleListTask(taskUiState: List<TaskItemUiState>){
         taskAdapter.submitList(taskUiState)
-    }
-
-    private fun handleUiEvents(uiState: UiState){
-        binding.progressTask.isVisible = false
-        when(uiState){
-            is UiState.Success -> toast(getString(R.string.msgSucess))
-            is UiState.Failure -> toast(exception(uiState.exception))
-            is UiState.Loading -> binding.progressTask.isVisible = true
-            else -> Unit
-        }
     }
 
     override fun onClick(v: View) {
